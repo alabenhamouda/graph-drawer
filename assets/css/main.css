@@ -9,6 +9,7 @@ button {
     height: 50px;
     margin-bottom: 10px;
     background-size: cover;
+    transition: all 0.5s ease;
 }
 button.drag {
     background-image: url(../images/drag.png);
@@ -24,6 +25,11 @@ button.link {
 
 button.remove {
     background-image: url(../images/remove.png);
+}
+
+.active {
+    box-shadow: 0 0 8px rgb(234 34 34)
+;
 }
 
 .toolbar{

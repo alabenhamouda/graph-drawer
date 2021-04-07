@@ -2,11 +2,7 @@ const radius = 30;
 var V = [];
 let draggedNode = null;
 let drag = false;
-const DRAW = 1;
-const DRAG = 2;
-const LINK = 3;
-const REMOVE = 4;
-let mode = DRAW;
+let mode = "draw";
 
 class Vertex {
     constructor(x, y) {
@@ -25,26 +21,26 @@ class Vertex {
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    const drawButton = select('.draw');
-    const dragButton = select(".drag");
-    const linkButton = select(".link");
-    const removeButton = select(".remove");
+    const modes = ["drag", "draw", "link", "remove"];
+    const buttons = [];
 
-    drawButton.mousePressed(() => {
-        mode = DRAW;
-    })
+    function update() {
+        for (let i = 0; i < buttons.length; i++) {
+            if (mode == modes[i]) {
+                buttons[i].addClass("active");
+            } else
+                buttons[i].removeClass("active");
+        }
+    }
 
-    dragButton.mousePressed(() => {
-        mode = DRAG;
-    })
-
-    linkButton.mousePressed(() => {
-        mode = LINK;
-    })
-
-    removeButton.mousePressed(() => {
-        mode = REMOVE;
-    })
+    for (let i = 0; i < modes.length; i++) {
+        buttons[i] = select("." + modes[i]);
+        buttons[i].mousePressed(() => {
+            mode = modes[i];
+            update();
+        })
+    }
+    update();
 }
 function draw() {
     // Draw the entire graph
@@ -65,7 +61,7 @@ function draw() {
         }
     }
 
-    if (mode == DRAG && drag && draggedNode) {
+    if (mode == "drag" && drag && draggedNode) {
         draggedNode.x = mouseX;
         draggedNode.y = mouseY;
     }
@@ -83,14 +79,14 @@ var v2 = null
 
 function mousePressed() {
     if (mouseButton == LEFT) {
-        if (mode == DRAW) {
+        if (mode == "draw") {
             createNode();
-        } else if (mode == LINK) {
+        } else if (mode == "link") {
             v1 = locateClickedNode();
-        } else if (mode == DRAG) {
+        } else if (mode == "drag") {
             drag = true;
             draggedNode = locateClickedNode();
-        } else if (mode == REMOVE) {
+        } else if (mode == "remove") {
             for (let i = 0; i < V.length; i++) {
                 if (dist(mouseX, mouseY, V[i].x, V[i].y) < radius) {
                     V[i].removed = true;
@@ -104,12 +100,12 @@ function mousePressed() {
 
 function mouseReleased() {
     if (mouseButton == LEFT) {
-        if (mode == LINK) {
+        if (mode == "link") {
             v2 = locateClickedNode();
             if (v1 != null && v2 != null && v1 != v2 && !v1.adj.includes(v2)) {
                 v1.adj.push(v2);
             }
-        } else if (mode == DRAG) {
+        } else if (mode == "drag") {
             drag = false;
         }
     }

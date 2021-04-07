@@ -1,20 +1,24 @@
-const radius = 30;
+const radius = 40;
 var V = [];
 let draggedNode = null;
 let drag = false;
 let mode = "draw";
+let count = 1;
 
 class Vertex {
-    constructor(x, y) {
+    constructor(x, y, num) {
         this.x = x;
         this.y = y;
         this.adj = [];
         this.removed = false;
+        this.num = num;
     }
 
     display() {
         fill(255);
         circle(this.x, this.y, radius)
+        fill(0);
+        text(this.num, this.x, this.y + radius);
     }
 }
 
@@ -41,6 +45,8 @@ function setup() {
         })
     }
     update();
+    textAlign(CENTER, CENTER);
+    textSize(18);
 }
 function draw() {
     // Draw the entire graph
@@ -70,7 +76,7 @@ function draw() {
 }
 
 function createNode() {
-    var vertex = new Vertex(mouseX, mouseY);
+    var vertex = new Vertex(mouseX, mouseY, count++);
     V.push(vertex);
 }
 

@@ -83,7 +83,9 @@ function createNode() {
 var v1 = null
 var v2 = null
 
-function mousePressed() {
+function mousePressed(event) {
+    if (event.target.tagName == "BUTTON")
+        return;
     if (mouseButton == LEFT) {
         if (mode == "draw") {
             createNode();

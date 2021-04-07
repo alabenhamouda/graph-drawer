@@ -1,0 +1,35 @@
+button {
+    border: 2px #333 solid;
+    border-radius: 10px;
+    background: none;
+    padding: 10px;
+    cursor: pointer;
+    outline: none;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+    background-size: cover;
+}
+button.drag {
+    background-image: url(../images/drag.png);
+}
+
+button.draw {
+    background-image: url(../images/draw.png);
+}
+
+button.link {
+    background-image: url(../images/link.png);
+}
+
+button.remove {
+    background-image: url(../images/remove.png);
+}
+
+.toolbar{
+    position: absolute;
+    right: 1%;
+    top: 3%;
+    display: flex;
+    flex-direction: column;
+}

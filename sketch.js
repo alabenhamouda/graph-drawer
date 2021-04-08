@@ -132,7 +132,7 @@ function drawArrow(v1, v2) {
 }
 
 function locateClickedNode() {
-    for (var i = 0; i < V.length; i++) {
+    for (var i = V.length - 1; i >= 0; i--) {
         if (dist(mouseX, mouseY, V[i].x, V[i].y) < radius) {
             return V[i];
         }

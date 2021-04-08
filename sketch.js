@@ -25,7 +25,7 @@ class Vertex {
         fill(255);
         circle(this.x, this.y, radius)
         fill(0);
-        text(this.num, this.x, this.y + radius);
+        text(this.num, this.x, this.y);
     }
 }
 
@@ -132,9 +132,10 @@ function mouseReleased() {
 }
 function drawArrow(v1, v2) {
     let vec = createVector(v2.x - v1.x, v2.y - v1.y)
+    vec.setMag(vec.mag() - radius / 2);
     translate(v1.x, v1.y);
     rotate(vec.heading());
-    line(0, 0, vec.mag(), 0);
+    line(radius / 2, 0, vec.mag(), 0);
     if (!v2.adj.includes(v1)) {
         const size = 12;
         fill(0);

@@ -14,6 +14,13 @@ class Vertex {
         this.num = num;
     }
 
+    removeAdjacent(v) {
+        let idx = this.adj.indexOf(v);
+        if (idx != -1) {
+            this.adj.splice(idx, 1);
+        }
+    }
+
     display() {
         fill(255);
         circle(this.x, this.y, radius)
@@ -90,16 +97,21 @@ function mousePressed(event) {
         if (mode == "draw") {
             createNode();
         } else if (mode == "link") {
-            v1 = locateClickedNode();
+            v1 = locateClickedNode()[0];
         } else if (mode == "drag") {
             drag = true;
-            draggedNode = locateClickedNode();
+            draggedNode = locateClickedNode()[0];
         } else if (mode == "remove") {
-            for (let i = 0; i < V.length; i++) {
-                if (dist(mouseX, mouseY, V[i].x, V[i].y) < radius) {
-                    V[i].removed = true;
-                    V.splice(i, 1);
-                    break;
+            let idx = locateClickedNode()[1];
+            if (idx != -1) {
+                V[idx].removed = true;
+                V.splice(idx, 1);
+            } else {
+                let ret = locateHoveredEdge();
+                if (ret) {
+                    let [u, v] = ret;
+                    u.removeAdjacent(v);
+                    v.removeAdjacent(u);
                 }
             }
         }
@@ -109,7 +121,7 @@ function mousePressed(event) {
 function mouseReleased() {
     if (mouseButton == LEFT) {
         if (mode == "link") {
-            v2 = locateClickedNode();
+            v2 = locateClickedNode()[0];
             if (v1 != null && v2 != null && v1 != v2 && !v1.adj.includes(v2)) {
                 v1.adj.push(v2);
             }
@@ -133,10 +145,46 @@ function drawArrow(v1, v2) {
 
 function locateClickedNode() {
     for (var i = V.length - 1; i >= 0; i--) {
-        if (dist(mouseX, mouseY, V[i].x, V[i].y) < radius) {
-            return V[i];
+        if (dist(mouseX, mouseY, V[i].x, V[i].y) < radius / 2) {
+            return [V[i], i];
         }
     }
-    if (i == V.length)
-        return null;
+    return [null, -1];
+}
+
+function mouseMoved() {
+    if (mode == "remove") {
+        if (locateHoveredEdge() != null || locateClickedNode()[0] != null) {
+            cursor("./assets/images/cursor-remove.png", 16, 16);
+        } else {
+            cursor(ARROW);
+        }
+    }
+}
+
+function locateHoveredEdge() {
+    let s = new Set();
+    const minDist = 10;
+    for (let u of V) {
+        for (let v of u.adj) {
+            if (!s.has([u, v])) {
+                s.add([v, u]);
+                let directeur = createVector(v.x - u.x, v.y - u.y);
+                directeur.normalize();
+                let toMouse = createVector(mouseX - u.x, mouseY - u.y);
+                let d = directeur.cross(toMouse).mag();
+                if (d < minDist && between(mouseX, u.x, v.x) && between(mouseY, u.y, v.y)) {
+                    return [u, v];
+                }
+            }
+        }
+    }
+    return null;
+}
+
+function between(x, a, b) {
+    if (x >= min(a, b) && x <= max(a, b)) {
+        return true;
+    }
+    return false;
 }

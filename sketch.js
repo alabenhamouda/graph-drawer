@@ -174,7 +174,11 @@ function locateHoveredEdge() {
                 directeur.normalize();
                 let toMouse = createVector(mouseX - u.x, mouseY - u.y);
                 let d = directeur.cross(toMouse).mag();
-                if (d < minDist && between(mouseX, u.x, v.x) && between(mouseY, u.y, v.y)) {
+                let AH = directeur.copy();
+                AH.setMag(toMouse.dot(directeur));
+                let H = createVector(u.x, u.y);
+                H.add(AH);
+                if (d < minDist && between(H.x, u.x, v.x) && between(H.y, u.y, v.y)) {
                     return [u, v];
                 }
             }

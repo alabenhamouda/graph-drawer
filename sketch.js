@@ -10,7 +10,6 @@ class Vertex {
         this.x = x;
         this.y = y;
         this.adj = [];
-        this.removed = false;
         this.num = num;
     }
 
@@ -18,7 +17,9 @@ class Vertex {
         let idx = this.adj.indexOf(v);
         if (idx != -1) {
             this.adj.splice(idx, 1);
+            return true;
         }
+        return false;
     }
 
     display() {
@@ -34,6 +35,11 @@ function setup() {
 
     const modes = ["drag", "draw", "link", "remove"];
     const buttons = [];
+    const undoButton = select(".undo");
+
+    undoButton.mousePressed(() => {
+        Operation.undo();
+    })
 
     function update() {
         for (let i = 0; i < buttons.length; i++) {
@@ -66,11 +72,7 @@ function draw() {
     for (let v of V) {
         for (let i = 0; i < v.adj.length; i++) {
             let u = v.adj[i];
-            if (u.removed) {
-                v.adj.splice(i, 1);
-            } else {
-                drawArrow(v, u);
-            }
+            drawArrow(v, u);
         }
     }
 
@@ -95,7 +97,9 @@ function mousePressed(event) {
         return;
     if (mouseButton == LEFT) {
         if (mode == "draw") {
-            createNode();
+            // createNode();
+            var cr = new CreateOperation(V, mouseX, mouseY);
+            cr.do();
         } else if (mode == "link") {
             v1 = locateClickedNode()[0];
         } else if (mode == "drag") {
@@ -104,14 +108,16 @@ function mousePressed(event) {
         } else if (mode == "remove") {
             let idx = locateClickedNode()[1];
             if (idx != -1) {
-                V[idx].removed = true;
-                V.splice(idx, 1);
+                // V[idx].removed = true;
+                // V.splice(idx, 1);
+                new RemoveNodeOperation(V, idx).do();
             } else {
                 let ret = locateHoveredEdge();
                 if (ret) {
-                    let [u, v] = ret;
-                    u.removeAdjacent(v);
-                    v.removeAdjacent(u);
+                    // let [u, v] = ret;
+                    // u.removeAdjacent(v);
+                    // v.removeAdjacent(u);
+                    new RemoveLinkOperation(V, u, v).do();
                 }
             }
         }
@@ -122,9 +128,10 @@ function mouseReleased() {
     if (mouseButton == LEFT) {
         if (mode == "link") {
             v2 = locateClickedNode()[0];
-            if (v1 != null && v2 != null && v1 != v2 && !v1.adj.includes(v2)) {
-                v1.adj.push(v2);
-            }
+            // if (v1 != null && v2 != null && v1 != v2 && !v1.adj.includes(v2)) {
+            //     v1.adj.push(v2);
+            // }
+            new LinkOperation(V, v1, v2).do();
         } else if (mode == "drag") {
             drag = false;
         }

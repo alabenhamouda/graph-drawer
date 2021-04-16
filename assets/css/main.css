@@ -27,6 +27,10 @@ button.remove {
     background-image: url(../images/remove.png);
 }
 
+button.undo {
+    background-image: url(../images/undo.png);
+}
+
 .active {
     box-shadow: 0 0 8px rgb(234 34 34)
 ;

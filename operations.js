@@ -67,6 +67,10 @@ class RemoveNodeOperation extends Operation {
         return true
     }
     undo() {
+        Operation.missing = Operation.missing.filter(num => num != this.backup.num);
+        if (this.backup.num == Operation.count) {
+            Operation.count++;
+        }
         this.V.splice(this.idx, 0, this.backup);
         for (let v of this.adjTo) {
             v.adj.push(this.backup);

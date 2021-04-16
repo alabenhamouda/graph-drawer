@@ -114,7 +114,7 @@ function mousePressed(event) {
             } else {
                 let ret = locateHoveredEdge();
                 if (ret) {
-                    // let [u, v] = ret;
+                    let [u, v] = ret;
                     // u.removeAdjacent(v);
                     // v.removeAdjacent(u);
                     new RemoveLinkOperation(V, u, v).do();

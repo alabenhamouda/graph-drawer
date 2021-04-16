@@ -85,8 +85,8 @@ class RemoveLinkOperation extends Operation {
         this.v2 = v2;
     }
     run() {
-        this.forward = this.v1.removeAdjacent(v2);
-        this.backward = this.v2.removeAdjacent(v1);
+        this.forward = this.v1.removeAdjacent(this.v2);
+        this.backward = this.v2.removeAdjacent(this.v1);
         return true;
     }
     undo() {
